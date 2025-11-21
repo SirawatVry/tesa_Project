@@ -1,0 +1,13 @@
+{
+  "file_path": "outputs\\problem_3\\P3_OUTPUT_FULL.mp4",
+  "file_size_mb": 66.41776466369629,
+  "size_check_pass": true,
+  "resolution": "1920x1080",
+  "fps": 25.0,
+  "total_frames": 1875,
+  "duration_sec": 75.0,
+  "corrupt_frames": 0,
+  "avg_brightness": 114.43935564557611,
+  "avg_std": 56.264792165155384,
+  "annotation_rate": 100.0
+}

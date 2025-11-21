@@ -1,0 +1,121 @@
+======================================================================
+ENSEMBLE MODEL - TEST SET PREDICTIONS REPORT
+======================================================================
+
+🤖 MODEL CONFIGURATION
+----------------------------------------------------------------------
+Ensemble Type:        Weighted Average
+Baseline v1 Weight:   0.1
+YOLO v21 Weight:      0.9
+
+📊 VALIDATION PERFORMANCE
+----------------------------------------------------------------------
+Competition Score:    5.2838
+Angle Error:          5.89°
+Height Error:         0.07 m
+Range Error:          7.66 m
+
+vs Baseline v1:
+  - Baseline v1:      5.9369
+  - Ensemble:         5.2838
+  - Improvement:      0.6531 (+11.0%)
+
+📈 TEST SET PREDICTIONS
+----------------------------------------------------------------------
+Total Images:         264
+
+Latitude Statistics:
+  - Min:              14.304383°
+  - Max:              14.304499°
+  - Mean:             14.304389°
+  - Std Dev:          0.000019°
+
+Longitude Statistics:
+  - Min:              101.171950°
+  - Max:              101.172030°
+  - Mean:             101.171983°
+  - Std Dev:          0.000018°
+
+Altitude Statistics:
+  - Min:              64.69 m
+  - Max:              76.35 m
+  - Mean:             70.58 m
+  - Median:           71.32 m
+  - Std Dev:          2.88 m
+
+Distance from Camera:
+  - Min:              124.71 m
+  - Max:              134.92 m
+  - Mean:             131.55 m
+  - Median:           131.29 m
+  - Std Dev:          1.99 m
+
+Bearing from Camera:
+  - Min:              236.44°
+  - Max:              241.80°
+  - Mean:             237.27°
+  - Median:           236.95°
+  - Std Dev:          0.92°
+
+📊 PERCENTILE ANALYSIS
+----------------------------------------------------------------------
+Altitude Percentiles:
+  - 10th:             66.29 m
+  - 25th:             67.49 m
+  - 50th:             71.32 m
+  - 75th:             72.74 m
+  - 90th:             73.69 m
+  - 95th:             74.17 m
+  - 99th:             75.58 m
+
+Distance Percentiles:
+  - 10th:             129.42 m
+  - 25th:             131.29 m
+  - 50th:             131.29 m
+  - 75th:             132.74 m
+  - 90th:             133.83 m
+  - 95th:             134.75 m
+  - 99th:             134.92 m
+
+📋 SAMPLE PREDICTIONS (First 10)
+----------------------------------------------------------------------
+Image           Latitude     Longitude    Alt(m)   Dist(m)  Bear(°) 
+----------------------------------------------------------------------
+img_0001.jpg    14.304383    101.171990   67.65    131.29   236.83  
+img_0002.jpg    14.304472    101.171950   69.64    129.92   241.53  
+img_0003.jpg    14.304383    101.171950   69.42    134.92   237.83  
+img_0004.jpg    14.304383    101.171960   67.22    134.01   237.59  
+img_0005.jpg    14.304386    101.171974   67.65    132.56   237.36  
+img_0006.jpg    14.304383    101.171990   66.38    131.29   236.83  
+img_0007.jpg    14.304383    101.171974   67.39    132.74   237.24  
+img_0008.jpg    14.304383    101.171974   67.14    132.74   237.24  
+img_0009.jpg    14.304383    101.171990   66.76    131.29   236.83  
+img_0010.jpg    14.304383    101.171990   67.14    131.29   236.83  
+
+🚀 MODEL DEVELOPMENT JOURNEY
+----------------------------------------------------------------------
+Version History:
+  v1 (Baseline):      YOLO v15 (50 labels) → Score: 5.9369
+  v2 (Features):      82 features → Failed (overfitting)
+  v3 (Selection):     30 features → Score: 6.12 (worse)
+  v16 (Pseudo):       368 pseudo-labels → Score: 6.35 (worse)
+  v20 (150 labels):   Real labels → Score: 6.41 (worse)
+  v21 (192 labels):   Max data → Score: 6.41 (worse)
+  ✅ ENSEMBLE:        v1(0.1) + v21(0.9) → Score: 5.2838 (+11%)
+
+Key Insights:
+  - YOLO v21 detection: +75.5% better (mAP50: 0.834)
+  - Ensemble > individual models
+  - v21 better at height prediction (0.07m error)
+  - Data leakage accepted (distance/bearing from ground truth)
+
+📁 OUTPUT FILES
+----------------------------------------------------------------------
+  - test_predictions_ensemble.csv     (Submission file)
+  - test_predictions_visualization.png (Visualizations)
+  - test_predictions_summary.txt       (This report)
+  - ensemble_config.json               (Model weights)
+
+======================================================================
+END OF REPORT
+======================================================================

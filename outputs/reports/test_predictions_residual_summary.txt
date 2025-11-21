@@ -1,0 +1,100 @@
+
+======================================================================
+RESIDUAL LEARNING - TEST SET PREDICTIONS REPORT
+======================================================================
+
+🤖 MODEL CONFIGURATION
+----------------------------------------------------------------------
+Approach:         Residual Learning (Error Correction)
+Base Models:      4 (distance, bearing_sin, bearing_cos, altitude)
+Correction:       3 XGBoost residual models
+YOLO Model:       runs/detect/drone_detect_v21_max_data/weights/best.pt
+Features Used:    9 bbox features
+
+📊 VALIDATION PERFORMANCE (from training)
+----------------------------------------------------------------------
+Competition Score: 1.8994 ← 64.8% improvement!
+Angle Error:       1.82°  (was 4.80°)
+Height Error:      1.47 m (was 3.91 m)
+Range Error:       2.71 m (was 9.67 m)
+
+vs Other Approaches:
+  Residual Learning:  1.90  ← BEST (27% better than approximation!)
+  Bbox Approximation: 2.61
+  Ensemble (v1+v21):  5.28
+  Baseline (v1):      5.94
+
+📈 TEST SET PREDICTIONS
+----------------------------------------------------------------------
+Total Images:      264
+
+YOLO Detection:
+  Detected:        264/264 (100.0%)
+  Avg Confidence:  0.526
+
+Latitude Statistics:
+  Mean:            14.304645°
+  Median:          14.304642°
+  Std Dev:         0.000155°
+  Range:           14.304268° - 14.304985°
+
+Longitude Statistics:
+  Mean:            101.172541°
+  Median:          101.172544°
+  Std Dev:         0.000213°
+  Range:           101.171813° - 101.172862°
+
+Altitude Statistics:
+  Mean:            52.04 m
+  Median:          51.38 m
+  Std Dev:         4.60 m
+  Range:           39.69 - 74.33 m
+
+Distance from Camera:
+  Mean:            67.76 m
+  Median:          74.67 m
+  Std Dev:         24.75 m
+  Range:           16.90 - 148.62 m
+
+Bearing from Camera:
+  Mean:            228.84°
+  Median:          226.00°
+  Std Dev:         12.37°
+  Range:           206.88° - 259.85°
+
+🎯 HOW RESIDUAL LEARNING WORKS
+----------------------------------------------------------------------
+1. Base Prediction: Use bbox features → predict distance/bearing/altitude
+2. Error Pattern: Train XGBoost to predict systematic errors
+3. Correction: Subtract predicted errors from base predictions
+4. Result: Much more accurate predictions!
+
+Key Improvements:
+  ✅ Angle error reduced by 62% (4.80° → 1.82°)
+  ✅ Range error reduced by 72% (9.67m → 2.71m)
+  ✅ Height error reduced by 62% (3.91m → 1.47m)
+  ✅ Total score improved by 65% (5.39 → 1.90)
+
+✅ ADVANTAGES
+----------------------------------------------------------------------
+✅ No data leakage - corrections learned from training data only
+✅ Best performance - score 1.90 (64.8% better than original!)
+✅ Captures complex error patterns XGBoost can model
+✅ Still uses only bbox features at inference time
+
+📋 SAMPLE PREDICTIONS (First 10)
+----------------------------------------------------------------------
+Image              Latitude    Longitude  Alt(m) Dist(m) Bear(°)  Det
+----------------------------------------------------------------------
+img_0001.jpg         14.304752  101.172776   49.08   39.84  219.30  ✅
+img_0002.jpg         14.304985  101.172860   39.69   16.90  253.36  ✅
+img_0003.jpg         14.304946  101.172862   40.41   18.50  239.88  ✅
+img_0004.jpg         14.304902  101.172816   45.81   25.21  236.08  ✅
+img_0005.jpg         14.304910  101.172808   44.45   25.48  238.79  ✅
+img_0006.jpg         14.304697  101.172724   55.19   48.11  219.88  ✅
+img_0007.jpg         14.304886  101.172785   45.65   28.98  236.64  ✅
+img_0008.jpg         14.304863  101.172798   45.31   29.38  231.02  ✅
+img_0009.jpg         14.304858  101.172801   46.00   29.48  229.82  ✅
+img_0010.jpg         14.304727  101.172726   53.99   45.46  222.28  ✅
+
+======================================================================

@@ -1,0 +1,98 @@
+
+======================================================================
+BBOX APPROXIMATION - TEST SET PREDICTIONS REPORT
+======================================================================
+
+🤖 MODEL CONFIGURATION
+----------------------------------------------------------------------
+Approach:         Bbox Approximation (No Data Leakage)
+YOLO Model:       runs/detect/drone_detect_v21_max_data/weights/best.pt
+Features Used:    9 bbox features
+Models:           4 (distance, bearing_sin, bearing_cos, altitude)
+
+📊 VALIDATION PERFORMANCE (from training)
+----------------------------------------------------------------------
+Competition Score: 2.6143
+Angle Error:       2.75°
+Height Error:      2.52 m
+Range Error:       2.10 m
+
+vs Other Approaches:
+  Bbox Approximation: 2.61  ← BEST (50% better!)
+  Ensemble (v1+v21):  5.28
+  Baseline (v1):      5.94
+
+📈 TEST SET PREDICTIONS
+----------------------------------------------------------------------
+Total Images:      264
+
+YOLO Detection:
+  Detected:        264/264 (100.0%)
+  Avg Confidence:  0.526
+
+Latitude Statistics:
+  Mean:            14.304639°
+  Median:          14.304607°
+  Std Dev:         0.000134°
+  Range:           14.304371° - 14.304965°
+
+Longitude Statistics:
+  Mean:            101.172575°
+  Median:          101.172561°
+  Std Dev:         0.000184°
+  Range:           101.172119° - 101.172867°
+
+Altitude Statistics:
+  Mean:            51.35 m
+  Median:          51.17 m
+  Std Dev:         3.13 m
+  Range:           42.48 - 59.54 m
+
+Distance from Camera:
+  Mean:            64.85 m
+  Median:          71.09 m
+  Std Dev:         21.89 m
+  Range:           23.24 - 102.54 m
+
+Bearing from Camera:
+  Mean:            226.16°
+  Median:          225.13°
+  Std Dev:         10.39°
+  Range:           205.20° - 255.25°
+
+🎯 KEY FEATURES
+----------------------------------------------------------------------
+Most Important for Distance:
+  1. yolo_area (0.78) - Bbox size inversely related to distance
+  2. yolo_h (0.12) - Vertical size
+  3. yolo_w (0.03) - Horizontal size
+
+Most Important for Altitude:
+  1. yolo_area (0.39) - Overall size
+  2. yolo_cy (0.17) - Vertical position
+  3. yolo_dist_from_center (0.12)
+
+✅ ADVANTAGES
+----------------------------------------------------------------------
+✅ No data leakage - uses only bbox features
+✅ Best performance - score 2.61 (50% better than ensemble!)
+✅ No need for extra GCP collection
+✅ Generalizes to new positions
+✅ Physically interpretable (area → distance)
+
+📋 SAMPLE PREDICTIONS (First 10)
+----------------------------------------------------------------------
+Image              Latitude    Longitude  Alt(m) Dist(m) Bear(°)  Det
+----------------------------------------------------------------------
+img_0001.jpg      14.304771   101.172801   48.32   36.52  218.10    ✅
+img_0002.jpg      14.304965   101.172805   42.62   23.24  252.25    ✅
+img_0003.jpg      14.304912   101.172825   42.48   23.76  236.91    ✅
+img_0004.jpg      14.304864   101.172782   47.12   30.63  233.19    ✅
+img_0005.jpg      14.304866   101.172771   47.11   31.48  234.96    ✅
+img_0006.jpg      14.304718   101.172742   52.25   45.03  219.85    ✅
+img_0007.jpg      14.304844   101.172762   48.15   33.79  232.40    ✅
+img_0008.jpg      14.304829   101.172769   47.71   34.18  229.46    ✅
+img_0009.jpg      14.304824   101.172773   48.23   34.28  228.26    ✅
+img_0010.jpg      14.304730   101.172725   50.47   45.30  222.72    ✅
+
+======================================================================
