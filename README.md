@@ -70,8 +70,7 @@ python scripts/05_evaluation/check_actual_track_ids.py
 ├── 🔬 scripts/                # Analysis & utility scripts
 ├── 📁 docs/                   # Full documentation
 ├── 📤 outputs/                # Results go here
-├── 🐳 Dockerfile              # Container files
-├── docker-compose.yml         # Docker orchestration
+├── 🐳 Docker/                 # Container files
 └── requirements.txt           # Dependencies
 ```
 
