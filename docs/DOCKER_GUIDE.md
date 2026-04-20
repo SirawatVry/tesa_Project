@@ -1,63 +1,150 @@
-# Docker Guide - TESA Problem 2
+# Docker Setup Guide
 
-## 📦 Docker Setup
-
-โปรเจคนี้รองรับการรัน Docker ในสองรูปแบบ:
-- **CPU**: Dockerfile (เร็วน้อยแต่เบา)
-- **GPU**: Dockerfile.gpu (เร็วขึ้น แต่ต้องมี CUDA)
+Run the pipeline in isolated containers.
 
 ---
 
-## 🚀 Quick Start (CPU)
+## 🐳 Docker Configuration
 
-### 1. Build Image
-```bash
-docker build -t tesa-drone-detection:latest .
+### Available Options
+- **Dockerfile**: CPU version (Python 3.10)
+- **Dockerfile.gpu**: GPU version (CUDA 11.8)
+
+### File Organization
+```
+.
+├── Dockerfile              # CPU image
+├── Dockerfile.gpu          # GPU image
+├── docker-compose.yml      # CPU orchestration
+├── docker-compose.gpu.yml  # GPU orchestration
+└── .dockerignore          # Excluded files
 ```
 
-### 2. Run Container
+---
+
+## 🚀 Quick Start
+
+### CPU Version
 ```bash
-# แบบอย่างสำหรับ:
-docker run --rm -v $(pwd)/outputs:/app/outputs tesa-drone-detection:latest
+# Build
+docker build -t drone-detection:latest .
 
-# Windows PowerShell:
-docker run --rm -v ${PWD}\outputs:C:\app\outputs tesa-drone-detection:latest
-
-# Windows CMD:
-docker run --rm -v %CD%\outputs:C:\app\outputs tesa-drone-detection:latest
+# Run
+docker run --rm -v $(pwd)/outputs:/app/outputs drone-detection:latest
 ```
 
-### 3. Using Docker Compose
+### GPU Version
 ```bash
-# Build and run
+# Build
+docker build -f Dockerfile.gpu -t drone-detection:gpu .
+
+# Run (requires NVIDIA runtime)
+docker run --rm --gpus all \
+  -v $(pwd)/outputs:/app/outputs \
+  drone-detection:gpu
+```
+
+---
+
+## 🧬 Docker Compose
+
+### CPU
+```bash
+# Start
 docker-compose up
 
-# Build only
-docker-compose build
-
-# Run container
-docker-compose up -d
-
-# Check logs
-docker-compose logs -f
-
-# Stop container
+# Stop
 docker-compose down
+
+# View logs
+docker-compose logs -f
+```
+
+### GPU
+```bash
+# Start
+docker-compose -f docker-compose.gpu.yml up
+
+# Stop
+docker-compose -f docker-compose.gpu.yml down
 ```
 
 ---
 
-## 🎮 GPU Support
+## 🔧 Volume Mounts
+
+Default volumes:
+```yaml
+inputs:
+  - P3_VIDEO.mp4 (read-only)
+
+outputs:
+  - outputs/
+
+configs:
+  - configs/ (read-only)
+
+models:
+  - models/ (read-only)
+
+data:
+  - data/ (read-only)
+```
+
+---
+
+## 💻 Interactive Mode
+
+### Access Container Shell
+```bash
+docker-compose run --rm drone-detection /bin/bash
+```
+
+### Run Commands Inside Container
+```bash
+docker-compose exec drone-detection python src/problem_3_pipeline.py
+```
+
+---
+
+## 🎯 GPU Support
 
 ### Prerequisites
 - NVIDIA GPU
 - NVIDIA Docker Runtime
-- CUDA Toolkit 11.8+
+- CUDA 11.8+
 - cuDNN 8.x
 
-### 1. Build GPU Image
+### Verify GPU
 ```bash
-docker build -f Dockerfile.gpu -t tesa-drone-detection:gpu .
+docker run --rm --gpus all drone-detection:gpu \
+  python -c "import torch; print(f'GPU: {torch.cuda.is_available()}')"
+```
+
+---
+
+## 📊 Image Size
+
+| Version | Size |
+|---------|------|
+| CPU | ~2.5-3 GB |
+| GPU | ~4-5 GB |
+
+---
+
+## 🧹 Cleanup
+
+```bash
+# Remove containers
+docker-compose down
+
+# Remove images
+docker rmi drone-detection:latest
+docker rmi drone-detection:gpu
+
+# Remove all
+docker system prune -a
+```
 ```
 
 ### 2. Run with GPU

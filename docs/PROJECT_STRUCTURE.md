@@ -1,99 +1,120 @@
-# Project Structure - TESA Problem 2
+# Detailed Project Structure
 
-## 📁 โครงสร้างโปรเจค
+Complete directory organization and component descriptions.
+
+---
+
+## 📂 Directory Tree
 
 ```
-tesa_problem_2/
+drone-detection-pipeline/
 │
-├── 📹 P3_VIDEO.mp4                    # Input video (75.7s, 1920x1080, 25 FPS)
+├── 📄 Root Files
+│   ├── README.md                 # Main project documentation
+│   ├── requirements.txt          # Python dependencies
+│   ├── Dockerfile               # CPU container
+│   ├── Dockerfile.gpu           # GPU container
+│   ├── docker-compose.yml       # Docker orchestration
+│   ├── docker-compose.gpu.yml   # GPU orchestration
+│   ├── .gitignore               # Git exclusions
+│   └── .dockerignore            # Docker exclusions
 │
-├── 📋 Documentation
-│   ├── README.md                      # Project overview
-│   ├── PROBLEM_3_TASKS.md            # Task tracking
-│   └── PROJECT_STRUCTURE.md          # This file
+├── 📂 src/                      # Main pipeline code
+│   ├── problem_3_pipeline.py   # Main entry point
+│   ├── detector.py              # YOLO detection
+│   ├── tracker.py               # ByteTrack tracking
+│   ├── localizer.py             # GPS prediction
+│   └── visualizer.py            # Video annotation
 │
-├── ⚙️ configs/                        # Configuration files
-│   ├── botsort_custom.yaml           # Tracker config (track_buffer: 180)
-│   ├── data.yaml                     # Dataset config
-│   ├── ensemble_config.json          # Ensemble settings
-│   └── feature_columns_*.json        # Feature definitions
+├── ⚙️ configs/                  # Configuration files
+│   ├── botsort_custom.yaml     # Tracking config
+│   ├── data.yaml               # Dataset config
+│   ├── feature_columns.json    # Feature definitions
+│   └── ensemble_config.json    # Ensemble settings
 │
-├── 📊 data/                           # Processed data
-│   ├── gcp_*.csv                     # GCP reference data
-│   ├── train_metadata_*.csv          # Engineered features
-│   └── train_metadata_with_yolo_*.csv # YOLO predictions
+├── 📊 data/                     # Training data & metadata
+│   ├── metadata.csv             # Training metadata
+│   ├── samples.csv              # Sample data
+│   └── samples.json             # Sample metadata
 │
-├── 🖼️ datasets/                       # Raw datasets
-│   ├── DATA_TRAIN/                   # Training data
-│   │   ├── csv/                      # Metadata
-│   │   ├── image/                    # Original images
-│   │   ├── labels/                   # YOLO labels
-│   │   └── train/valid/              # Split datasets
-│   └── DATA_TEST/                    # Test data
+├── 🖼️ datasets/                # Raw dataset storage
+│   ├── DATA_TRAIN/             # Training images
+│   ├── DATA_TEST/              # Test images
+│   └── train_data/             # Processed data
 │
-├── 🤖 models/                         # Trained models
-│   ├── yolo11n.pt                    # YOLO11n pretrained
-│   ├── yolov8n.pt                    # YOLOv8n pretrained
-│   ├── tomorbest.pt                  # Custom model
-│   ├── models_approximation/         # Localization models
-│   │   ├── nn_best.pth               # Neural network
-│   │   ├── bbox_features.json        # Feature stats
-│   │   └── correction_params.json    # Calibration
-│   └── models_stacking/              # Ensemble models
+├── 🤖 models/                   # Pre-trained models
+│   ├── best.pt                 # YOLO model
+│   ├── models_approximation/   # Localization models
+│   │   ├── nn_best.pth
+│   │   ├── bbox_features.json
+│   │   └── correction_params.json
+│   └── models_stacking/        # Ensemble models
 │
-├── 🏃 runs/                           # Training runs
-│   ├── detect/                       # Detection training
-│   │   ├── drone_detect_v21_max_data/  # Best model (mAP: 81%)
-│   │   │   └── weights/best.pt
-│   │   └── [other versions]/
-│   └── obb/                          # OBB training
+├── 🏃 runs/                     # Training runs
+│   ├── detect/                 # Detection training
+│   │   └── [training versions]
+│   └── obb/                    # OBB training
 │
-├── 📤 outputs/                        # Results
-│   ├── problem_3/
-│   │   ├── final/                    # ✅ Final outputs
-│   │   │   └── P3_OUTPUT_FINAL.mp4   # Final video (< 200 MB)
-│   │   ├── analysis/                 # 📊 Analysis results
-│   │   │   ├── track_patterns/
-│   │   │   └── frame_analysis/
-│   │   └── experiments/              # 🧪 Experimental outputs
-│   ├── predictions/
-│   ├── visualization_results/
-│   └── reports/
+├── 🔬 scripts/                  # Utility scripts
+│   ├── 01_data_exploration/   # Data analysis
+│   ├── 02_yolo_preparation/   # Dataset prep
+│   ├── 03_yolo_training/      # Training
+│   ├── 04_xgboost_training/   # XGBoost
+│   ├── 05_evaluation/         # Evaluation
+│   ├── 06_prediction/         # Predictions
+│   ├── 07_ensemble/           # Ensemble
+│   └── 08_utilities/          # Utilities
 │
-├── 🔬 scripts/                        # Analysis & utilities
-│   ├── 01_data_exploration/
-│   ├── 02_yolo_preparation/
-│   ├── 03_yolo_training/
-│   ├── 04_xgboost_training/
-│   ├── 05_evaluation/                # Analysis scripts
-│   │   ├── analyze_track_patterns.py
-│   │   ├── check_actual_track_ids.py
-│   │   └── analyze_specific_frames.py
-│   ├── 06_prediction/
-│   ├── 07_ensemble/
-│   └── 08_utilities/
-│       └── merge_tracks.py
+├── 📤 outputs/                  # Results directory
+│   ├── problem_3/              # Main results
+│   │   ├── final/              # Final deliverables
+│   │   ├── analysis/           # Analysis data
+│   │   └── experiments/        # Experiment outputs
+│   ├── predictions/            # CSV predictions
+│   ├── visualizations/         # Generated plots
+│   └── reports/                # Analysis reports
 │
-├── 💻 src/                            # Main source code
-│   ├── problem_3_pipeline.py         # 🎯 Main pipeline
-│   ├── detector.py                   # YOLO detection
-│   ├── tracker.py                    # Multi-object tracking
-│   ├── localizer.py                  # GPS prediction
-│   └── visualizer.py                 # Visualization
-│
-└── 📚 notebooks/                      # Jupyter notebooks
-
+└── 📚 docs/                     # Documentation
+    ├── README.md               # Overview (in root)
+    ├── OVERVIEW.md             # This file
+    ├── QUICK_START.md          # Quick start guide
+    ├── DOCKER_GUIDE.md         # Docker setup
+    ├── PROJECT_STRUCTURE.md    # Directory info
+    └── SUMMARY.md              # Project summary
 ```
 
 ---
 
-## 🎯 Main Pipeline: `src/problem_3_pipeline.py`
+## 🎯 Component Breakdown
 
-### **Input:**
-- Video: `P3_VIDEO.mp4`
-- Model: `runs/detect/drone_detect_v21_max_data/weights/best.pt`
-- Config: `configs/botsort_custom.yaml`
+### Source Code (src/)
 
-### **Output:**
-- Video: `outputs/problem_3/final/P3_OUTPUT_FINAL.mp4`
-- Stats: Console output
+| File | Purpose |
+|------|---------|
+| **problem_3_pipeline.py** | Main orchestration |
+| **detector.py** | YOLO detection implementation |
+| **tracker.py** | ByteTrack tracking |
+| **localizer.py** | GPS coordinate prediction |
+| **visualizer.py** | Video frame annotation |
+
+### Scripts (scripts/)
+
+| Folder | Purpose | Count |
+|--------|---------|-------|
+| 01_data_exploration | Data analysis & EDA | 2 |
+| 02_yolo_preparation | Dataset preparation | 6 |
+| 03_yolo_training | Training pipelines | 5 |
+| 04_xgboost_training | XGBoost models | 8 |
+| 05_evaluation | Evaluation metrics | 7 |
+| 06_prediction | Inference scripts | 7 |
+| 07_ensemble | Ensemble methods | 7 |
+| 08_utilities | Helper utilities | 15 |
+
+### Models (models/)
+
+| Type | Purpose | Count |
+|------|---------|-------|
+| YOLO | Object detection | 2+ |
+| Approximation | Localization | 3 |
+| XGBoost | Coordinate prediction | Multiple |
+| Stacking | Ensemble | Multiple |

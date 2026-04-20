@@ -1,82 +1,98 @@
-# TESA Problem 2 - Drone Detection & Localization
+# Drone Detection & Localization Pipeline
 
-## 📋 โครงสร้างโปรเจค
+Complete documentation and technical specifications for the drone detection, tracking, and localization system.
+
+---
+
+## 📁 Project Structure
 
 ```
-tesa_problem_2/
-├── configs/                      # ไฟล์ Configuration
-│   ├── data.yaml                 # YOLO dataset config
-│   ├── data_augmented.yaml       # Augmented dataset config
-│   ├── ensemble_config.json      # Ensemble model config
-│   ├── feature_columns*.json     # Feature definitions (v1, v2, v16, v21)
-│   └── selected_features_v3.json # Selected features
+drone-detection-pipeline/
+├── src/                       # Main source code
+│   ├── problem_3_pipeline.py  # Main pipeline entry point
+│   ├── detector.py            # YOLO detection module
+│   ├── tracker.py             # Multi-object tracking
+│   ├── localizer.py           # GPS coordinate prediction
+│   └── visualizer.py          # Video annotation
 │
-├── data/                         # ข้อมูล Training และ Metadata
-│   ├── train_metadata*.csv       # Metadata ต่างๆ (original, engineered, enhanced)
-│   ├── gcp_collection_targets.csv
-│   ├── gcp_samples.csv
-│   └── gcp_samples.json
+├── configs/                   # Configuration files
+│   ├── botsort_custom.yaml    # Tracking configuration
+│   └── feature_columns.json   # Feature definitions
 │
-├── datasets/                     # Dataset ต้นฉบับ
-│   ├── DATA_TRAIN/              # Training images & labels
-│   ├── DATA_TEST/               # Test images
-│   └── train_data/              # Processed training data
+├── models/                    # Pre-trained models
+│   ├── best.pt               # Best YOLO model
+│   ├── models_approximation/ # Localization models
+│   └── models_stacking/      # Ensemble models
 │
-├── models/                       # โมเดลที่ Train แล้ว
-│   ├── tomorbest.pt             # Best YOLO model
-│   ├── yolo*.pt                 # Pre-trained YOLO models
-│   ├── xgb_model_*.pkl          # XGBoost models (lat, lon, alt) หลายเวอร์ชัน
-│   ├── models_approximation/    # Approximation approach models
-│   │   ├── nn_best.pth
-│   │   ├── nn_custom_loss.pth
-│   │   ├── bbox_features.json
-│   │   └── correction_params.json
-│   └── models_stacking/         # Stacking ensemble models
+├── data/                      # Training data & metadata
+│   ├── metadata.csv
+│   ├── samples.csv
+│   └── samples.json
 │
-├── yolo_dataset/                # YOLO Training Dataset
-│   ├── train/
-│   └── valid/
+├── scripts/                   # Utility scripts
+│   ├── 01_data_exploration/  # Data analysis
+│   ├── 02_yolo_preparation/  # Dataset preparation
+│   ├── 03_yolo_training/     # Training scripts
+│   ├── 04_xgboost_training/  # XGBoost models
+│   ├── 05_evaluation/        # Evaluation scripts
+│   ├── 06_prediction/        # Prediction scripts
+│   ├── 07_ensemble/          # Ensemble methods
+│   └── 08_utilities/         # Utility tools
 │
-├── yolo_dataset_augmented/      # Augmented YOLO Dataset
-│   ├── train/
-│   └── valid/
+├── outputs/                   # Results directory
+│   ├── predictions/          # CSV predictions
+│   ├── visualizations/       # Generated plots
+│   └── reports/              # Analysis reports
 │
-├── more_label_1/                # Additional labeled data
-│   ├── labels/
-│   └── train/
+├── docs/                      # Documentation
+│   ├── OVERVIEW.md           # This file
+│   ├── QUICK_START.md        # Quick start guide
+│   ├── DOCKER_GUIDE.md       # Docker setup
+│   ├── PROJECT_STRUCTURE.md  # Detailed structure
+│   └── SUMMARY.md            # Project summary
 │
-├── scripts/                     # Scripts แบ่งตามหมวดหมู่
-│   ├── 01_data_exploration/     # 📊 Data Analysis & EDA
-│   ├── 02_yolo_preparation/     # 🏷️ YOLO Dataset Preparation
-│   ├── 03_yolo_training/        # 🎯 YOLO Model Training
-│   ├── 04_xgboost_training/     # 🌲 XGBoost Model Training
-│   ├── 05_evaluation/           # 📈 Model Evaluation
-│   ├── 06_prediction/           # 🔮 Prediction Scripts
-│   ├── 07_ensemble/             # 🎭 Ensemble Methods
-│   └── 08_utilities/            # 🔧 Utilities & Analysis
-│
-├── outputs/                     # ผลลัพธ์การประมวลผล
-│   ├── predictions/             # CSV predictions
-│   ├── visualizations/          # รูปภาพและกราฟ
-│   ├── reports/                 # Reports และ Documentation
-│   ├── visualization_results/   # Additional visualization outputs
-│   └── multi_drone_strategies/  # Multi-drone analysis results
-│
-├── runs/                        # YOLO Training Runs
-│   ├── detect/
-│   └── obb/
-│
-└── docs/                        # Documentation
-    ├── OVERVIEW.md              # This file
-    ├── PROJECT_STRUCTURE.md     # Detailed structure
-    ├── QUICK_START.md           # Quick start guide
-    ├── SUMMARY.md               # Project summary
-    └── PROBLEM_3_TASKS.md       # Task checklist
+├── Dockerfile                # CPU container
+├── Dockerfile.gpu            # GPU container
+├── docker-compose.yml        # CPU orchestration
+├── docker-compose.gpu.yml    # GPU orchestration
+├── requirements.txt          # Python dependencies
+└── README.md                 # Main readme
 ```
 
 ---
 
-## 🚀 Quick Start
+## 🎯 Core Architecture
+
+### Detection Pipeline
+```
+Video Input → YOLO Detection → Bounding Boxes
+```
+
+### Tracking Pipeline
+```
+Bounding Boxes → ByteTrack → Track IDs
+```
+
+### Localization Pipeline
+```
+YOLO Features → ML Models → GPS Coordinates (lat, lon, alt)
+```
+
+### Visualization Pipeline
+```
+Tracked Results → Video Annotation → Output Video
+```
+
+---
+
+## 📊 Component Details
+
+| Component | Purpose | Input | Output |
+|-----------|---------|-------|--------|
+| **detector.py** | YOLO detection | Video frame | Bounding boxes + confidence |
+| **tracker.py** | ByteTrack tracking | Bounding boxes | Track IDs |
+| **localizer.py** | GPS prediction | YOLO features | Lat, Lon, Alt |
+| **visualizer.py** | Video annotation | Detections + coords | Annotated frame |
 
 ### 1. ติดตั้ง Dependencies
 ```bash

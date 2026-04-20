@@ -213,34 +213,13 @@ python scripts/08_utilities/test_environment.py
 - ✅ Docker: Complete (CPU & GPU)
 
 **Last Updated:** April 2026
-- **v20**: Merged additional labels
-- **v21**: Maximum dataset (train + valid merged)
-- **tomorbest.pt**: Best performing model
-
-### XGBoost Models
-- **v1**: Basic features
-- **v2**: Enhanced features
-- **v3**: Feature selection applied
-- **v16**: Aligned with YOLO v16
-- **v21**: Aligned with YOLO v21
-
-### Ensemble Approaches
-- **Ensemble v1 + v21**: Weighted average
-- **Stacking**: Meta-learner approach
-- **Approximation**: Geometric + NN correction
-- **Residual Learning**: Base + residual correction
 
 ---
 
+## 🤝 Contributing
 
-### Requirements
-1. ✅ วิดีโอแสดง:
-   - Bounding box รอบโดรน
-   - Track ID
-   - Predicted coordinates (lat, lon, alt)
-
-2. ✅ Source code (.zip)
-   - ไม่รวมรูปภาพ/วิดีโอ
-   - สามารถรันได้จริง
+For bug reports, feature requests, or improvements, please check the documentation or open an issue.
 
 ---
+
+**Made with ❤️ for drone detection and localization**
