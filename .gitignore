@@ -48,6 +48,16 @@ yolo_dataset_augmented/valid/images/*.jpg
 *.pth
 *.pkl
 *.h5
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Docker volumes
+volumes/
+
+# Video outputs
+*.mp4
 *.hdf5
 models/*.pt
 models/*.pkl

@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  tesa-drone-detection:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tesa_drone_detection
+    
+    # For GPU support, uncomment the following
+    # runtime: nvidia
+    # environment:
+    #   - NVIDIA_VISIBLE_DEVICES=all
+    
+    volumes:
+      # Mount input video
+      - ./P3_VIDEO.mp4:/app/P3_VIDEO.mp4:ro
+      
+      # Mount output directory
+      - ./outputs:/app/outputs
+      
+      # Mount configs
+      - ./configs:/app/configs:ro
+      
+      # Mount models
+      - ./models:/app/models:ro
+      
+      # Mount data
+      - ./data:/app/data:ro
+    
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    
+    # Remove the following line if GPU is not needed
+    # devices:
+    #   - /dev/nvidia0:/dev/nvidia0
+    #   - /dev/nvidiactl:/dev/nvidiactl
+    #   - /dev/nvidia-uvm:/dev/nvidia-uvm
+    
+    # Uncomment for interactive mode with shell
+    # stdin_open: true
+    # tty: true
+    # command: /bin/bash

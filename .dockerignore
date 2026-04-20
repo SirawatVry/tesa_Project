@@ -1,0 +1,65 @@
+# Git
+.git
+.gitignore
+.github
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+
+# Tests
+.pytest_cache/
+.coverage
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large data files
+datasets/DATA_TRAIN/image/*.jpg
+datasets/DATA_TRAIN/image/*.png
+datasets/DATA_TEST/*.jpg
+datasets/DATA_TEST/*.png
+yolo_dataset/train/images/*.jpg
+yolo_dataset/valid/images/*.jpg
+yolo_dataset_augmented/train/images/*.jpg
+yolo_dataset_augmented/valid/images/*.jpg
+
+# Model files (large)
+*.pt
+*.pth
+*.pkl
+*.h5
+
+# Output files (can be large)
+outputs/
+runs/
+*.mp4
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Documentation
+docs/
+
+# README
+README.md
+SUMMARY.md
+QUICK_START.md
+PROJECT_STRUCTURE.md
+PROBLEM_3_TASKS.md

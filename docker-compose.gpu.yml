@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  tesa-drone-detection-gpu:
+    build:
+      context: .
+      dockerfile: Dockerfile.gpu
+    container_name: tesa_drone_detection_gpu
+    
+    # GPU support
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - CUDA_VISIBLE_DEVICES=0
+    
+    volumes:
+      # Mount input video
+      - ./P3_VIDEO.mp4:/app/P3_VIDEO.mp4:ro
+      
+      # Mount output directory
+      - ./outputs:/app/outputs
+      
+      # Mount configs
+      - ./configs:/app/configs:ro
+      
+      # Mount models
+      - ./models:/app/models:ro
+      
+      # Mount data
+      - ./data:/app/data:ro
+    
+    # GPU devices
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    
+    # Uncomment for interactive mode with shell
+    # stdin_open: true
+    # tty: true
+    # command: /bin/bash

@@ -1,0 +1,56 @@
+# Multi-stage build with GPU support (CUDA)
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04 as builder
+
+WORKDIR /app
+
+# Install Python and build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3.10 \
+    python3-pip \
+    build-essential \
+    libopencv-dev \
+    python3-opencv \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+
+# Final stage
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
+
+WORKDIR /app
+
+# Install Python and runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3.10 \
+    python3-pip \
+    libgomp1 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libopencv-core4.5 \
+    libopencv-imgproc4.5 \
+    libopencv-imgcodecs4.5 \
+    libopencv-videoio4.5 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy Python packages from builder
+COPY --from=builder /usr/local/lib/python3.10/dist-packages /usr/local/lib/python3.10/dist-packages
+
+# Set environment variables
+ENV PATH=/usr/local/bin:$PATH \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    CUDA_VISIBLE_DEVICES=0
+
+# Copy project files
+COPY . .
+
+# Create output directory
+RUN mkdir -p outputs/problem_3/final
+
+# Default command
+CMD ["python3", "src/problem_3_pipeline.py"]
